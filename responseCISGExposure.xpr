@@ -1,0 +1,147 @@
+import org.dom4j.*;
+import java.util.*;
+import java.util.logging.Logger;
+
+Logger logger = Logger.getLogger("");
+//logger.info("start exposure response...");
+//logger.info("processResponse: " + flowVars.processResponse);
+if (flowVars.CISGOutput.Premium.LiabSizeCr.Exposure.Total != "#N/A") {
+	flowVars.liabSizeCr + (double) flowVars.CISGOutput.Premium.LiabSizeCr.Exposure.Total;
+}
+if (flowVars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total != "#N/A") {
+	flowVars.finalLiabPrem += (double) flowVars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total;
+}
+if ( flowVars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total != "#N/A")
+{
+	flowVars.primaryClassTotalPremium += (double) flowVars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total;
+}
+
+if (flowVars.processResponse == "true") {
+
+	dtoCoverageNodes = flowVars.domPayload.selectNodes("//DTOLine[@StatusCd='Active' and @LineCd='Liability'][1]/DTORisk[@Status='Active' and @TypeCd='Exposure' and @LocationRef= 'Location-465697646-800339871' and @id='Risk-1296379588-1802098261']/DTOCoverage[@Status='Active']");
+	dtoCoverageStepsNodes = flowVars.domPayload.selectNodes("//DTOLine[@StatusCd=\'Active\' and @LineCd=\'Liability\'][1]/DTORisk[@Status=\'Active\' and @TypeCd=\'Exposure\' and @LocationRef='Location-465697646-800339871' and @id='Risk-1296379588-1802098261']/DTOCoverage[@Status=\'Active\']/DTOSteps");
+
+	//logger.info("inside start exposure response...");
+	for (Node node : dtoCoverageStepsNodes){
+		node.detach();
+	}
+
+	String coverageCd = "";
+	String fullTermAmt = "";
+	int processFlag = 0;
+	int stepOrder = 1;
+	int subStepOrder = 1;
+	int subSubStepOrder = 1;
+	char multiChar = "X";
+	for (Node node : dtoCoverageNodes){
+
+		Element element = (Element) node;
+		//logger.info("active coverage: " + element.attributeValue("CoverageCd"));
+
+		if (element.attributeValue("CoverageCd") == "LIAB") {
+			//logger.info("inside LIAB...");
+			processFlag = 0;
+			coverageCd = "LIAB";
+			fullTermAmt = flowVars.CISGOutput.Premium.FinalLiabPrem.Exposure.LIAB;
+
+			node.addAttribute("FullTermAmt", fullTermAmt);
+			node.addElement("DTOSteps");
+
+
+			stepNode = node.selectSingleNode("DTOSteps");
+			
+			tmpNode = stepNode.addElement("DTOStep")
+				.addAttribute("Order", String.valueOf(stepOrder++))
+				.addAttribute("Name", "Base Premium")
+				.addAttribute("Operation","=")
+				.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.BasePrem)
+				.addAttribute("Value", flowVars.CISGOutput.Factors.LIAB.BasePrem);	
+			
+			subStepNode = tmpNode.addElement("DTOSteps");
+
+			subStepNode.addElement("DTOStep")
+					.addAttribute("Order", String.valueOf(subStepOrder++))
+					.addAttribute("Name", "Exposure")
+					.addAttribute("Operation","=")
+					.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.Exposure)
+					.addAttribute("Value", flowVars.CISGOutput.Factors.LIAB.Exposure);
+
+			subStepNode.addElement("DTOStep")
+					.addAttribute("Order", String.valueOf(subStepOrder++))
+					.addAttribute("Name", "Base Rate")
+					.addAttribute("Operation",multiChar)
+					.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.BaseRate);
+
+			subStepNode.addElement("DTOStep")
+					.addAttribute("Order", String.valueOf(subStepOrder++))
+					.addAttribute("Name", "Territory")
+					.addAttribute("Operation",multiChar)
+					.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.Terr);
+
+			subStepNode.addElement("DTOStep")
+					.addAttribute("Order", String.valueOf(subStepOrder++))
+					.addAttribute("Name", "ILF")
+					.addAttribute("Operation",multiChar)
+					.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.Limit);	
+
+			subStepNode.addElement("DTOStep")
+					.addAttribute("Order", String.valueOf(subStepOrder++))
+					.addAttribute("Name", "Med Pay")
+					.addAttribute("Operation",multiChar)
+					.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.MedPay)
+					.addAttribute("Value", flowVars.CISGOutput.Factors.LIAB.BasePrem);
+
+			stepNode.addElement("DTOStep")
+				.addAttribute("Order", String.valueOf(stepOrder++))
+				.addAttribute("Name", "Large Premium Discount Plan")
+				.addAttribute("Operation",multiChar)
+				.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.LPDP);	
+
+			stepNode.addElement("DTOStep")
+				.addAttribute("Order", String.valueOf(stepOrder++))
+				.addAttribute("Name", "IRPM")
+				.addAttribute("Operation",multiChar)
+				.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.IRPM)
+				.addAttribute("Value", flowVars.CISGOutput.Factors.LIAB.AnnualPremium);
+
+			stepNode.addElement("DTOStep")
+				.addAttribute("Order", String.valueOf(stepOrder++))
+				.addAttribute("Name", "Term Factor")
+				.addAttribute("Operation",multiChar)
+				.addAttribute("Factor", flowVars.CISGOutput.Factors.LIAB.Term)
+				.addAttribute("Value", fullTermAmt);		
+		}
+
+
+		if (processFlag == 1) {
+			//logger.info("fulltermAmt for active coverage " + coverageCd + " is: " + fullTermAmt);
+		}
+		else {
+			//logger.info("did not find premium for: " + element.attributeValue("CoverageCd"));
+		}
+
+		if (processFlag == 1) {
+
+			if (fullTermAmt == "#N/A") {
+				fullTermAmt = "2";
+			}
+
+			node.addAttribute("FullTermAmt", fullTermAmt);
+
+			node.addElement("DTOSteps");
+
+			stepNode = node.selectSingleNode("DTOSteps");
+			stepNode.addElement("DTOStep")
+				.addAttribute("Order","1")
+				.addAttribute("Name", coverageCd + " Final Premium")
+				.addAttribute("Desc", coverageCd + " Final Premium Desc")
+				.addAttribute("Operation","=")
+				.addAttribute("Factor", fullTermAmt)
+				.addAttribute("Value", fullTermAmt);
+
+			coverageCd = "";
+			processFlag = 0;
+			fullTermAmt = "";
+		}
+	}
+}
