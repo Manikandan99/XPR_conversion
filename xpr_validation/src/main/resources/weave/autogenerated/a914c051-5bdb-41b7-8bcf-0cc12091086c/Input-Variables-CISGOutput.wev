@@ -1,0 +1,156 @@
+%dw 2.0
+
+type auto_a914c051_5bdb_41b7_8bcf_0cc12091086c_Input_Variables_CISGOutput = {|
+  Premium: {|
+    FinalLiabPrem: {|
+      Pol: {|
+        EBLI: Number | String, 
+        STGP: Number | String, 
+        HANO: Number | String, 
+        ASBT: Number | String, 
+        DREN: Number | String, 
+        AGGL: Number | String, 
+        AIML: Number | String, 
+        WSUB: Number | String, 
+        PICO: Number | String, 
+        AIVS: Number | String, 
+        AIPA: Number | String, 
+        AIMA: Number | String, 
+        AILL: Number | String, 
+        LLEA: Number | String, 
+        AIDP: Number | String, 
+        BAIV: Number | String, 
+        WACombo: Number | String, 
+        Total: Number | String
+      |}, 
+      Exposure: {|
+        LIAB: Number | String, 
+        Total: Number | String
+      |}
+    |}, 
+    LiabSizeCr: {|
+      Pol: {| Total: Number | String |}, 
+      Exposure: {| Total: Number | String |}
+    |}
+  |}, 
+  Factors: {|
+    LIAB: {|
+      Exposure: Number | String, 
+      BaseRate: Number | String, 
+      Terr: Number | String, 
+      Limit: Number | String, 
+      MedPay: Number | String, 
+      BasePrem: Number | String, 
+      SizeCr: String, 
+      IRPM: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    EBLI: {|
+      FTE: Number | String, 
+      BaseCharge: Number | String, 
+      RatePerFTE: Number | String, 
+      PerFTE: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    STGP: {|
+      Exposure: Number | String, 
+      Rate: String, 
+      RatedPrem: Number | String, 
+      MinPrem: Number | String, 
+      BTM: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    HANO: {|
+      Charge: Null, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    DREN: {|
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    ASBT: {|
+      GLPrem: Number | String, 
+      AssBatFact: Number | String, 
+      RatedPrem: Number | String, 
+      MinPrem: Number | String, 
+      BTM: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    AGGL: {|
+      GLPrem: Number | String, 
+      PerLocAggFact: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    AIML: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    AIVS: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    AIPA: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    AIMA: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    AILL: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    AIDP: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    LLEA: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    WSUB: {|
+      Count: Number | String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    PICO: {|
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    BAIV: {|
+      Count: String, 
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}, 
+    WACombo: {|
+      Charge: Number | String, 
+      AnnualPremium: Number | String, 
+      Term: Number | String
+    |}
+  |}
+|}
+

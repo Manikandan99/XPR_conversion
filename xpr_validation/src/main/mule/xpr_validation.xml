@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="01c20e27-5324-4c77-b3fd-5dc525144bbd" >
+		<http:listener-connection host="0.0.0.0" port="8061" />
+	</http:listener-config>
+	<xml-module:config name="XML_Config" doc:name="XML Config" doc:id="180b35cf-97bb-443c-99c0-9dbc317f036d" />
+	<flow name="xpr_validationFlow" doc:id="a2a4bd04-e201-4fa9-b156-e429d6186197" >
+		<http:listener doc:name="Listener" doc:id="ffae6c91-bdf4-4176-ab85-c7f36ee2c26f" config-ref="HTTP_Listener_config" path="/validate" allowedMethods="POST"/>
+		<set-variable value="#[payload]" doc:name="Set domPayload" doc:id="e4a80f77-08f9-4f14-854d-558c8156678c" variableName="domPayload"/>
+		<set-variable value="0" doc:name="Set primaryClassTotalPremium" doc:id="82a4ebc2-4d6c-43bd-a619-4b31282b55d7" variableName="primaryClassTotalPremium"/>
+		<set-variable value="0" doc:name="Set liabSizeCr" doc:id="81a2b49f-7b5a-4e69-8a9f-b7931c7aff01" variableName="liabSizeCr"/>
+		<set-variable value="0" doc:name="Set finalLiabPrem" doc:id="01b2c756-d668-44a1-b63b-0c9fcd6d19c3" variableName="finalLiabPrem"/>
+		<set-variable value="true" doc:name="Set processResponse" doc:id="a388e801-9d2a-4a5b-8dca-37b30637f7fb" variableName="processResponse"/>
+		<set-payload value='&lt;?xml version="1.0" encoding="utf-8"?&gt; &lt;env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt; &lt;env:Body&gt; &lt;rateResponse xmlns="http://decisionresearch.com/RateMaker"&gt; &lt;!-- TOPA/CISG01/ALL/Calc_20190101_20191001 --&gt; &lt;RateResult&gt;&lt;Derived&gt;&lt;IRPMGL&gt;1.02&lt;/IRPMGL&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;HNOKey&gt;1000000C&lt;/HNOKey&gt;&lt;RatingBasis&gt;Sales&lt;/RatingBasis&gt;&lt;HNOGroup&gt;C&lt;/HNOGroup&gt;&lt;LocTerr&gt;1&lt;/LocTerr&gt;&lt;/Derived&gt;&lt;Pkg&gt;&lt;Premium&gt;&lt;FinalLiabPrem&gt;&lt;Class&gt;&lt;Class&gt;1986&lt;/Class&gt;&lt;/Class&gt;&lt;Pol&gt;&lt;AIVS&gt;0&lt;/AIVS&gt;&lt;AIML&gt;0&lt;/AIML&gt;&lt;AGGL&gt;0&lt;/AGGL&gt;&lt;AILL&gt;0&lt;/AILL&gt;&lt;ASBT&gt;400&lt;/ASBT&gt;&lt;AIMA&gt;0&lt;/AIMA&gt;&lt;HANO&gt;500&lt;/HANO&gt;&lt;DREN&gt;375&lt;/DREN&gt;&lt;STGP&gt;0&lt;/STGP&gt;&lt;AIPA&gt;0&lt;/AIPA&gt;&lt;AIDP&gt;0&lt;/AIDP&gt;&lt;LLEA&gt;0&lt;/LLEA&gt;&lt;WACombo&gt;0&lt;/WACombo&gt;&lt;PICO&gt;0&lt;/PICO&gt;&lt;EBLI&gt;525&lt;/EBLI&gt;&lt;BAIV&gt;0&lt;/BAIV&gt;&lt;WSUB&gt;0&lt;/WSUB&gt;&lt;/Pol&gt;&lt;/FinalLiabPrem&gt;&lt;LiabFinal&gt;&lt;Pol&gt;&lt;Total&gt;1800&lt;/Total&gt;&lt;/Pol&gt;&lt;Class&gt;&lt;Total&gt;1986&lt;/Total&gt;&lt;/Class&gt;&lt;/LiabFinal&gt;&lt;PreSizeCrLiabPrem&gt;&lt;Class&gt;&lt;Class&gt;1946.7&lt;/Class&gt;&lt;/Class&gt;&lt;/PreSizeCrLiabPrem&gt;&lt;LiabSizeCr&gt;&lt;Pol&gt;&lt;Total&gt;1400&lt;/Total&gt;&lt;/Pol&gt;&lt;Class&gt;&lt;Total&gt;1946.7&lt;/Total&gt;&lt;/Class&gt;&lt;/LiabSizeCr&gt;&lt;/Premium&gt;&lt;/Pkg&gt;&lt;Factors&gt;&lt;Pol&gt;&lt;PICO&gt;&lt;Charge&gt;200&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Count&gt;No&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;/PICO&gt;&lt;EBLI&gt;&lt;PerFTE&gt;25&lt;/PerFTE&gt;&lt;AnnualPremium&gt;525&lt;/AnnualPremium&gt;&lt;BaseCharge&gt;500&lt;/BaseCharge&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;FTE&gt;5&lt;/FTE&gt;&lt;RatePerFTE&gt;5&lt;/RatePerFTE&gt;&lt;/EBLI&gt;&lt;BAIV&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;Count&gt;No&lt;/Count&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Charge&gt;50&lt;/Charge&gt;&lt;/BAIV&gt;&lt;WSUB&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Charge&gt;100&lt;/Charge&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;/WSUB&gt;&lt;AIDP&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Charge&gt;50&lt;/Charge&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;/AIDP&gt;&lt;LLEA&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;Charge&gt;100&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;/LLEA&gt;&lt;WACombo&gt;&lt;Charge&gt;200&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Count&gt;No&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;/WACombo&gt;&lt;HANO&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;AnnualPremium&gt;500&lt;/AnnualPremium&gt;&lt;/HANO&gt;&lt;DREN&gt;&lt;AnnualPremium&gt;375&lt;/AnnualPremium&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;/DREN&gt;&lt;STGP&gt;&lt;RatedPrem&gt;0&lt;/RatedPrem&gt;&lt;MinPrem&gt;0&lt;/MinPrem&gt;&lt;Exposure&gt;1.2&lt;/Exposure&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;BTM&gt;0&lt;/BTM&gt;&lt;Rate&gt;n/a&lt;/Rate&gt;&lt;/STGP&gt;&lt;AIPA&gt;&lt;Charge&gt;100&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;/AIPA&gt;&lt;AIVS&gt;&lt;Charge&gt;50&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;/AIVS&gt;&lt;AIML&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;Charge&gt;50&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;/AIML&gt;&lt;AGGL&gt;&lt;GLPrem&gt;0&lt;/GLPrem&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;PerLocAggFact&gt;0&lt;/PerLocAggFact&gt;&lt;/AGGL&gt;&lt;AILL&gt;&lt;Charge&gt;50&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;/AILL&gt;&lt;ASBT&gt;&lt;AnnualPremium&gt;400&lt;/AnnualPremium&gt;&lt;BTM&gt;400&lt;/BTM&gt;&lt;RatedPrem&gt;0&lt;/RatedPrem&gt;&lt;GLPrem&gt;0&lt;/GLPrem&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;MinPrem&gt;400&lt;/MinPrem&gt;&lt;AssBatFact&gt;0.152&lt;/AssBatFact&gt;&lt;/ASBT&gt;&lt;AIMA&gt;&lt;Count&gt;0&lt;/Count&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;Charge&gt;50&lt;/Charge&gt;&lt;AnnualPremium&gt;0&lt;/AnnualPremium&gt;&lt;/AIMA&gt;&lt;/Pol&gt;&lt;Class&gt;&lt;Class&gt;&lt;MedPay&gt;1.03&lt;/MedPay&gt;&lt;AnnualPremium&gt;1986&lt;/AnnualPremium&gt;&lt;Terr&gt;1&lt;/Terr&gt;&lt;Exposure&gt;2000&lt;/Exposure&gt;&lt;Limit&gt;1.05&lt;/Limit&gt;&lt;SizeCr&gt;&lt;/SizeCr&gt;&lt;Term&gt;1&lt;/Term&gt;&lt;BaseRate&gt;0.9&lt;/BaseRate&gt;&lt;IRPM&gt;1.02&lt;/IRPM&gt;&lt;/Class&gt;&lt;/Class&gt;&lt;/Factors&gt;&lt;/RateResult&gt; &lt;/rateResponse&gt; &lt;/env:Body&gt; &lt;/env:Envelope&gt;' doc:name="Set Payload" doc:id="9892fabb-8566-483f-8120-21551f5b25b4" mimeType="application/xml"/>
+		<ee:transform doc:name="Transform Message" doc:id="9f84dbe3-318d-49c4-b981-7c8aba065186" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="CISGOutput" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	Premium: {
+		FinalLiabPrem: {
+			Pol: {
+				EBLI: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.EBLI[0] default "0",
+				STGP: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.STGP[0] default "0",
+				HANO: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.HANO[0] default "0",
+				ASBT: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.ASBT[0] default "0",
+				DREN: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.DREN[0] default "0",
+				AGGL: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.AGGL[0] default "0",
+				AIML: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.AIML[0] default "0",				
+				WSUB: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.WSUB[0] default "0",				
+				PICO: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.PICO[0] default "0",
+				AIVS: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.AIVS[0] default "0",
+				AIPA: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.AIPA[0] default "0",				
+				AIMA: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.AIMA[0] default "0",
+				AILL: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.AILL[0] default "0",
+				LLEA: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.LLEA[0] default "0",
+				AIDP: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.AIDP[0] default "0",
+				BAIV: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.BAIV[0] default "0",
+				WACombo: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Pol.WACombo[0] default "0",
+				Total: payload..rateResponse.RateResult.Pkg.Premium.LiabFinal.Pol.Total[0] default "1"
+			},
+			Exposure: {
+				LIAB: payload..rateResponse.RateResult.Pkg.Premium.FinalLiabPrem.Class.Class[0] default "1",
+				Total: payload..rateResponse.RateResult.Pkg.Premium.LiabFinal.Class.Total[0] default "1"
+			}
+		},
+		LiabSizeCr: {
+			Pol: {
+				Total: payload..rateResponse.RateResult.Pkg.Premium.LiabSizeCr.Pol.Total[0] default ""
+			},
+			Exposure: {
+				Total: payload..rateResponse.RateResult.Pkg.Premium.LiabSizeCr.Class.Total[0] default ""
+			}
+		}
+	},
+	Factors: {
+		LIAB: {
+			Exposure: payload..rateResponse.RateResult.Factors.Class.Class.Exposure[0] default "",
+			BaseRate: payload..rateResponse.RateResult.Factors.Class.Class.BaseRate[0] default "",
+			Terr: payload..rateResponse.RateResult.Factors.Class.Class.Terr[0] default "",
+			Limit: payload..rateResponse.RateResult.Factors.Class.Class.Limit[0] default "",
+			MedPay: payload..rateResponse.RateResult.Factors.Class.Class.MedPay[0] default "",
+			BasePrem: payload..rateResponse.RateResult.Pkg.Premium.PreSizeCrLiabPrem.Class.Class[0] default "",
+			SizeCr: payload..rateResponse.RateResult.Factors.Class.Class.SizeCr[0] default "",
+			IRPM: payload..rateResponse.RateResult.Factors.Class.Class.IRPM[0] default "",
+			AnnualPremium:  payload..rateResponse.RateResult.Factors.Class.Class.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Class.Class.Term[0] default ""
+		},
+		EBLI: {
+			FTE: payload..rateResponse.RateResult.Factors.Pol.EBLI.FTE[0] default "",
+			BaseCharge: payload..rateResponse.RateResult.Factors.Pol.EBLI.BaseCharge[0] default "",
+			RatePerFTE: payload..rateResponse.RateResult.Factors.Pol.EBLI.RatePerFTE[0] default "",
+			PerFTE: payload..rateResponse.RateResult.Factors.Pol.EBLI.PerFTE[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.EBLI.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.EBLI.Term[0] default ""
+		},
+		STGP: {
+			Exposure: payload..rateResponse.RateResult.Factors.Pol.STGP.Exposure[0] default "",
+			Rate: payload..rateResponse.RateResult.Factors.Pol.STGP.Rate[0] default "",
+			RatedPrem: payload..rateResponse.RateResult.Factors.Pol.STGP.RatedPrem[0] default "",
+			MinPrem: payload..rateResponse.RateResult.Factors.Pol.STGP.MinPrem[0] default "",
+			BTM: payload..rateResponse.RateResult.Factors.Pol.STGP.BTM[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.STGP.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.STGP.Term[0] default ""
+		},
+		HANO: {
+			Charge: payload..rateResponse.RateResultPkg.Premium.FinalLiabPrem.Pol.HANO[0],
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.HANO.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.HANO.Term[0] default ""
+		},
+		DREN: {
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.DREN.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.DREN.Term[0] default ""
+		},
+		ASBT: {
+			GLPrem: payload..rateResponse.RateResult.Factors.Pol.ASBT.GLPrem[0] default "",
+			AssBatFact: payload..rateResponse.RateResult.Factors.Pol.ASBT.AssBatFact[0] default "",
+			RatedPrem: payload..rateResponse.RateResult.Factors.Pol.ASBT.RatedPrem[0] default "",
+			MinPrem: payload..rateResponse.RateResult.Factors.Pol.ASBT.MinPrem[0] default "",
+			BTM: payload..rateResponse.RateResult.Factors.Pol.ASBT.BTM[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.ASBT.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.ASBT.Term[0] default ""			
+		},
+		AGGL: {
+			GLPrem: payload..rateResponse.RateResult.Factors.Pol.AGGL.GLPrem[0] default "",
+			PerLocAggFact: payload..rateResponse.RateResult.Factors.Pol.AGGL.PerLocAggFact[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.AGGL.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.AGGL.Term[0] default ""	
+		},
+		AIML: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.AIML.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.AIML.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.AIML.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.AIML.Term[0] default ""	
+		},
+		AIVS: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.AIVS.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.AIVS.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.AIVS.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.AIVS.Term[0] default ""	
+		},
+		AIPA: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.AIPA.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.AIPA.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.AIPA.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.AIPA.Term[0] default ""	
+		},	
+		AIMA: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.AIMA.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.AIMA.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.AIMA.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.AIMA.Term[0] default ""	
+		},
+		AILL: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.AILL.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.AILL.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.AILL.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.AILL.Term[0] default ""	
+		},	
+		AIDP: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.AIDP.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.AIDP.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.AIDP.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.AIDP.Term[0] default ""	
+		},		
+		LLEA: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.LLEA.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.LLEA.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.LLEA.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.LLEA.Term[0] default ""	
+		},
+		WSUB: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.WSUB.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.WSUB.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.WSUB.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.WSUB.Term[0] default ""	
+		},
+		PICO: {
+			Charge: payload..rateResponse.RateResult.Factors.Pol.PICO.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.PICO.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.PICO.Term[0] default ""	
+		},
+		BAIV: {
+			Count: payload..rateResponse.RateResult.Factors.Pol.BAIV.Count[0] default "",
+			Charge: payload..rateResponse.RateResult.Factors.Pol.BAIV.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.BAIV.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.BAIV.Term[0] default ""	
+		},
+		WACombo: {
+			Charge: payload..rateResponse.RateResult.Factors.Pol.WACombo.Charge[0] default "",
+			AnnualPremium: payload..rateResponse.RateResult.Factors.Pol.WACombo.AnnualPremium[0] default "",
+			Term: payload..rateResponse.RateResult.Factors.Pol.WACombo.Term[0] default ""
+		}
+	}
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="08caa2e1-76af-48c1-add3-d92afa37de14" message="check oupt setCISLOutput : #[vars.CISLOutput]" />
+		<ee:transform doc:name="Set liabSizeCr" doc:id="71b07610-5f12-4557-a0c4-c5488353e240" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="liabSizeCr" ><![CDATA[%dw 2.0
+output application/java
+---
+if (vars.CISGOutput.Premium.LiabSizeCr.Exposure.Total != null) (vars.liabSizeCr as Number + vars.CISGOutput.Premium.LiabSizeCr.Exposure.Total as Number) else (vars.liabSizeCr)]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="7fff567c-5f1b-49bd-bb9e-b959c2df3019" message="liabSizeCr : #[vars.liabSizeCr]"/>
+		<ee:transform doc:name="Set finalLiabPrem" doc:id="bc67075d-d487-452d-82cb-8c88c639af71">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="finalLiabPrem"><![CDATA[%dw 2.0
+output application/java
+---
+if (vars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total != null) (vars.finalLiabPrem +  vars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total) as Number else (vars.finalLiabPrem)]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="2081c1be-4a89-499a-bead-a689c641f40f" message="finalLiabPrem: #[vars.finalLiabPrem]"/>
+		<ee:transform doc:name="Set primaryClassTotalPremium" doc:id="a032b983-4c9c-4b4b-8950-f95afda0812d" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="primaryClassTotalPremium" ><![CDATA[%dw 2.0
+output application/java
+---
+if (vars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total != null ) (vars.primaryClassTotalPremium + vars.CISGOutput.Premium.FinalLiabPrem.Exposure.Total) as Number  else (vars.primaryClassTotalPremium)
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="954b63ed-508b-45ac-b1e8-2e371c058d35" message="primaryClassTotalPremium : #[vars.primaryClassTotalPremium]"/>
+		<choice doc:name="Choice" doc:id="821e0003-b1c1-4d05-8833-c9cf7bac21ca" >
+			<when expression='#[vars.processResponse == "true"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="4005b1b6-e7c2-49b5-aafb-3cb25f818b57" message="processResponse is true"/>
+				<set-payload value="#[vars.domPayload]" doc:name="Set Payload" doc:id="823dd519-c53a-48cf-9660-861e73b97ea0" />
+				<xml-module:xpath-extract doc:id="600d48db-9cd3-4eaa-94ce-b8501ce54d7b" config-ref="XML_Config" xpath="//DTOLine[@StatusCd='Active' and @LineCd='Liability'][1]/DTORisk[@Status='Active' and @TypeCd='Exposure' and @LocationRef= 'Location-465697646-800339871' and @id='Risk-1296379588-1802098261']/DTOCoverage[@Status='Active']"/>
+				<logger level="INFO" doc:name="Logger" doc:id="9389bc44-ff6d-4999-8c8f-f148b097daa8" message="after xpath : #[payload]"/>
+				<set-payload value="#[payload reduce ($$+$)]" doc:name="Set Payload" doc:id="6f4403d4-56d6-42c2-b7ad-abfb73fb53ca" mimeType="application/xml"/>
+				<xml-module:xpath-extract doc:name="Xpath extract" doc:id="19759aa2-e246-4ac3-9425-af0c67ea40d4" config-ref="XML_Config" xpath="/DTOCoverage/@CoverageCd" target="CoverageCd" targetValue="#[payload reduce ($$+$)]"/>
+				<logger level="INFO" doc:name="coverageid Logger" doc:id="3bac51eb-62f7-4ec0-aeba-b0609f28ca0c" message="coverageid : #[vars.CoverageCd]"/>
+				<choice doc:name="Choice" doc:id="db3e5171-d2f9-48ab-b334-141ac647f9fd" >
+					<when expression='#[vars.CoverageCd == "LIAB"]'>
+						<flow-ref doc:name="Sub_FlowresponseCISGExposure Flow Reference" doc:id="fbb6d632-84a4-44cf-8fba-d7336b2d17b0" name="Sub_FlowresponseCISGExposure" />
+					</when>
+					<otherwise >
+						<logger level="INFO" doc:name="Logger" doc:id="47fd3b5f-eead-4a5b-885f-b98c8eeea9bc" message="CoverageCd is not LIAB"/>
+					</otherwise>
+				</choice>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="95b30507-9d8e-41c4-b904-3391cc8378cc" message="processResponse is false"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<sub-flow name="Sub_FlowresponseCISGExposure" doc:id="a914c051-5bdb-41b7-8bcf-0cc12091086c" >
+		<logger level="INFO" doc:name="Sub_FlowresponseCISGExposure log" doc:id="77b73172-c5e9-41d9-8bba-42e394951495" message="Sub_FlowresponseCISGExposure flow is invoked"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="bd757c04-5426-459c-9c59-1b30bfb96122" mimeType="application/xml" />
+		<logger level="INFO" doc:name="fullTermAmt Logger" doc:id="69d08bad-05f9-4b7d-8a75-dbbc12c56e1f" message="fullTermAmt : #[vars.CISGOutput.Premium.FinalLiabPrem.Exposure.LIAB]"/>
+		<ee:transform doc:name="Transform Message" doc:id="8103fd57-a0d1-45aa-a9c3-2bf306010972" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="domPayload" ><![CDATA[%dw 2.0
+var processFlag = 0
+var stepOrder = 1
+var subStepOrder = 1
+var subSubStepOrder = 1
+var multiChar = "X"
+var coverageCd = "LIAB"
+var fullTermAmts = vars.CISGOutput.Premium.FinalLiabPrem.Exposure.LIAB
+output application/java
+fun transformDTOCoverage(x) = x.DTOCoverage.DTOLimit
+        /* update DTOCoverage.@FullTermAmt = fullTermAmts
+         * update the DTOSteps based on the xpr
+         * 
+         */
+    
+---
+transformDTOCoverage(payload)]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="25a57f1e-fd1c-4f99-bf24-78b145bae7e5" message="dom : #[vars.domPayload]"/>
+	</sub-flow>
+</mule>
